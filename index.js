@@ -1,6 +1,6 @@
 const sum = require("./sum.js")
 const http = require("http");
-const { rejects } = require("assert");
+const EventEmitter = require('events');
 
 // console.log(sum(2)(3)(4)())
 
@@ -51,3 +51,20 @@ const server = http.createServer( (req, res) => {
 })
 
 server.listen(3001)
+
+const myEmitter = new EventEmitter();
+let count = 0;
+
+myEmitter.on("message", () => {
+    
+    console.log("Event emitted ", count+1)    
+    
+})
+
+setInterval( () => {
+    if(count === 10){
+        process.kill(0)
+    }
+    myEmitter.emit("message")
+    count++
+}, 1000)
